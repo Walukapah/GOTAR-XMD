@@ -1,7 +1,20 @@
-FROM node:lts-buster
-RUN git clone https://github.com/gotartech/GOTAR-XMD/root/gotartech
-WORKDIR /root/gotartech
-RUN npm install && npm install -g pm2 || yarn install --network-concurrency 1
+FROM node:18-alpine
+
+# Install system dependencies including git
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev \
+    git
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
+
 EXPOSE 9090
 CMD ["npm", "start"]
