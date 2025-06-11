@@ -66,6 +66,7 @@ const {
   setInterval(clearTempDir, 5 * 60 * 1000);
   
   //===================SESSION-AUTH============================
+/**
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
 const sessdata = config.SESSION_ID.replace("GOTAR~XMD~", '');
@@ -75,6 +76,24 @@ if(err) throw err
 fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
 console.log("Session downloaded ✅")
 })})}
+**/
+if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
+    if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+    
+    const sessdata = config.SESSION_ID.replace("SRI-BOT~", '');
+    
+    try {
+        // The session data appears to be base64 encoded JSON
+        const decodedSession = Buffer.from(sessdata, 'base64').toString('utf-8');
+        
+        // Write the decoded session data to creds.json
+        fs.writeFileSync(__dirname + '/sessions/creds.json', decodedSession);
+        console.log("Session created successfully ✅");
+    } catch(err) {
+        console.error("Error processing session:", err);
+        throw err;
+    }
+}
 
 const express = require("express");
 const app = express();
